@@ -9,7 +9,6 @@ impl Plugin for UIPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup);
         app.add_systems(Update, (update_score_display, try_again_button));
-        app.add_observer(spawn_gameover_ui);
     }
 }
 
@@ -18,12 +17,6 @@ impl Plugin for UIPlugin {
 /* ------------------- */
 #[derive(Component)]
 struct ScoreDisplay;
-
-/* --------------- */
-/*      events     */
-/* --------------- */
-#[derive(Event)]
-pub struct SpawnGameOverUIEvent;
 
 /* ------------------ */
 /*      functions     */
@@ -52,10 +45,9 @@ fn update_score_display(
     **text = Text::new(format!("score: {}", score.0));
 }
 
-/* responds to SpawnGameOverUIEvent and spawns a game over ui accordingly */
-/* button logic is handled in try_again_button below */
+/* spawn a game over UI where the user can restart the game (called by player::handle_death) */
+/* try again button logic is handled in try_again_button below */
 pub fn spawn_gameover_ui(
-    _trigger: Trigger<SpawnGameOverUIEvent>, 
     mut commands: Commands, 
     score: Res<player::PlayerScore>
 ) {
@@ -78,6 +70,7 @@ pub fn spawn_gameover_ui(
                     },
                     ..default()
                 },
+                
                 Text::new("woops, looks like you hit yourself!"),
                 TextColor::from(BLACK)
             ),
@@ -98,7 +91,6 @@ pub fn spawn_gameover_ui(
                 TextColor::from(BLACK)
             ),
             (
-                Node::default(),
                 Button,
                 Text::new("try again"),
                 TextColor::from(GREY)
@@ -115,7 +107,7 @@ fn try_again_button(
     for (interaction, mut text_color) in interaction_query {
         match *interaction {
             Interaction::Pressed => {
-                commands.trigger(crate::RespawnArenaEvent);
+                commands.run_system_cached(crate::respawn_arena);
             }
             Interaction::Hovered => {
                 *text_color = TextColor::from(BLACK);

@@ -16,15 +16,6 @@ pub const PLAYAREA_Y: f32 = 300.;
 /* play area has to be divisible by the tile_size for tiling to work */
 pub const TILE_SIZE: f32 = 30.;
 
-/* --------------- */
-/*      events     */
-/* --------------- */
-#[derive(Event)]
-pub struct CleanUpArenaEvent;
-
-#[derive(Event)]
-pub struct RespawnArenaEvent;
-
 /* ------------------ */
 /*      functions     */
 /* ------------------ */
@@ -37,8 +28,6 @@ fn main() {
             ui::UIPlugin
         ))
         .add_systems(Startup, setup)
-        .add_observer(clean_up_arena)
-        .add_observer(respawn_arena)
 
         .insert_resource(ClearColor(Color::from(WHITE))) /* white background */
         .run();
@@ -57,8 +46,7 @@ fn setup(mut commands: Commands, mut window: Single<&mut Window>) {
     commands.spawn(Camera2d);
 }
 
-fn clean_up_arena(
-    _trigger: Trigger<CleanUpArenaEvent>,
+pub fn clean_up_arena(
     mut commands: Commands, 
     query: Query<Entity, Or<(With<Mesh2d>, With<Node>)>>
 ) {
@@ -68,14 +56,13 @@ fn clean_up_arena(
     }
 }
 
-fn respawn_arena(
-    _trigger: Trigger<RespawnArenaEvent>,
+pub fn respawn_arena(
     mut commands: Commands,
 
     mut score: ResMut<player::PlayerScore>,
     camera: Single<Entity, With<Camera2d>>
 ) {
-    commands.trigger(CleanUpArenaEvent);
+    commands.run_system_cached(clean_up_arena);
     commands.entity(*camera).despawn(); /* we despawn the camera as a new one will get created once main's startup runs, which will cause multiple cameras to exist */
     score.0 = 0;
 

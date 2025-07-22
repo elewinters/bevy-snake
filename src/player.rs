@@ -18,8 +18,6 @@ impl Plugin for PlayerPlugin {
             detect_apple_collision, 
             detect_segment_collision,
         ));
-        app.add_observer(spawn_segment);
-        app.add_observer(handle_death);
 
         app.insert_resource(MovementTimer(Timer::from_seconds(MOVEMENT_SPEED, TimerMode::Repeating)));
         app.insert_resource(PlayerScore(0));
@@ -58,15 +56,6 @@ struct MovementTimer(Timer);
 #[derive(Resource)]
 pub struct PlayerScore(pub u32);
 
-/* --------------- */
-/*      events     */
-/* --------------- */
-#[derive(Event)]
-struct SpawnSegmentEvent;
-
-#[derive(Event)]
-pub struct PlayerDiedEvent;
-
 /* ------------------ */
 /*      functions     */
 /* ------------------ */
@@ -84,7 +73,7 @@ fn spawn_player(
     ));
 
     /* we spawn one segment as well so that the player isnt just a single lonely cube */
-    commands.trigger(SpawnSegmentEvent);
+    commands.run_system_cached(spawn_segment);
 }
 
 fn change_direction(
@@ -187,15 +176,14 @@ fn detect_apple_collision(
         score.0 += 1;
         commands.entity(apple_entity).despawn();
 
-        commands.trigger(apple::SpawnAppleEvent);
-        commands.trigger(SpawnSegmentEvent);
+        commands.run_system_cached(apple::spawn_apple);
+        commands.run_system_cached(spawn_segment);
         println!("apples eaten: {}", score.0);
     }
 }
 
 /* this is where we extend the snake's tail */
 fn spawn_segment(
-    _trigger: Trigger<SpawnSegmentEvent>,
     mut commands: Commands,
 
     mut meshes: ResMut<Assets<Mesh>>,
@@ -211,7 +199,7 @@ fn spawn_segment(
     ));
 }
 
-/* detect if the player has hit their own tail, and trigger the PlayerDiedEvent */
+/* detect if the player has hit their own tail, and run the handle_death system */
 fn detect_segment_collision(
     mut commands: Commands,
 
@@ -220,16 +208,12 @@ fn detect_segment_collision(
 ) {
     for segment_transform in player_tail.iter() {
         if player_transform.translation == segment_transform.translation {
-            commands.trigger(PlayerDiedEvent);
+            commands.run_system_cached(handle_death);
         }
     }
 }
 
-/* respond to the PlayerDiedEvent */
-fn handle_death(
-    _trigger: Trigger<PlayerDiedEvent>,
-    mut commands: Commands 
-) {
-    commands.trigger(crate::CleanUpArenaEvent);
-    commands.trigger(ui::SpawnGameOverUIEvent);
+fn handle_death(mut commands: Commands ) {
+    commands.run_system_cached(crate::clean_up_arena);
+    commands.run_system_cached(ui::spawn_gameover_ui);
 }

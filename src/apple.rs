@@ -9,7 +9,6 @@ pub struct ApplePlugin;
 impl Plugin for ApplePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, startup);
-        app.add_observer(spawn_apple);
     }
 }
 
@@ -19,17 +18,11 @@ impl Plugin for ApplePlugin {
 #[derive(Component)]
 pub struct Apple();
 
-/* --------------- */
-/*      events     */
-/* --------------- */
-#[derive(Event)]
-pub struct SpawnAppleEvent;
-
 /* ------------------ */
 /*      functions     */
 /* ------------------ */
 fn startup(mut commands: Commands) {
-    commands.trigger(SpawnAppleEvent);
+    commands.run_system_cached(spawn_apple);
 }
 
 /* generate a random position that is properly aligned/tiled with the playarea */
@@ -51,9 +44,8 @@ fn generate_random_position() -> Vec3 {
     Vec3::new(x as f32, y as f32, 0.0)
 }
 
-/* responds to the SpawnAppleEvent and spawns an apple at a random location, if triggered */
+/* spawns an apple at a random location */
 pub fn spawn_apple(
-    _trigger: Trigger<SpawnAppleEvent>,
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
