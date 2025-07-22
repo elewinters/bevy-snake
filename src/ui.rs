@@ -107,7 +107,7 @@ fn try_again_button(
     for (interaction, mut text_color) in interaction_query {
         match *interaction {
             Interaction::Pressed => {
-                commands.run_system_cached(crate::respawn_arena);
+                commands.run_system_cached(crate::respawn_entities);
             }
             Interaction::Hovered => {
                 *text_color = TextColor::from(BLACK);

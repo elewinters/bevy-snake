@@ -33,8 +33,6 @@ fn main() {
         .run();
 }
 
-/* this runs when the player resets the arena even though it probably shouldn't */
-/* but that's probably fine */
 fn setup(mut commands: Commands, mut window: Single<&mut Window>) {
     /* set up the window correctly */
     window.resolution.set(PLAYAREA_X * 2. + TILE_SIZE, PLAYAREA_Y * 2. + TILE_SIZE);
@@ -46,7 +44,7 @@ fn setup(mut commands: Commands, mut window: Single<&mut Window>) {
     commands.spawn(Camera2d);
 }
 
-pub fn clean_up_arena(
+pub fn despawn_all_entities(
     mut commands: Commands, 
     query: Query<Entity, Or<(With<Mesh2d>, With<Node>)>>
 ) {
@@ -56,13 +54,13 @@ pub fn clean_up_arena(
     }
 }
 
-pub fn respawn_arena(
+pub fn respawn_entities(
     mut commands: Commands,
 
     mut score: ResMut<player::PlayerScore>,
     camera: Single<Entity, With<Camera2d>>
 ) {
-    commands.run_system_cached(clean_up_arena);
+    commands.run_system_cached(despawn_all_entities);
     commands.entity(*camera).despawn(); /* we despawn the camera as a new one will get created once main's startup runs, which will cause multiple cameras to exist */
     score.0 = 0;
 

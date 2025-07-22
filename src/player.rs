@@ -214,6 +214,6 @@ fn detect_segment_collision(
 }
 
 fn handle_death(mut commands: Commands ) {
-    commands.run_system_cached(crate::clean_up_arena);
+    commands.run_system_cached(crate::despawn_all_entities);
     commands.run_system_cached(ui::spawn_gameover_ui);
 }
