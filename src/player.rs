@@ -19,7 +19,6 @@ impl Plugin for PlayerPlugin {
             detect_segment_collision,
         ));
 
-        app.insert_resource(MovementTimer(Timer::from_seconds(MOVEMENT_SPEED, TimerMode::Repeating)));
         app.insert_resource(PlayerScore(0));
     }
 }
@@ -50,9 +49,6 @@ pub struct PlayerSegment();
 /* ------------------ */
 /*      resources     */
 /* ------------------ */
-#[derive(Resource)]
-struct MovementTimer(Timer);
-
 #[derive(Resource)]
 pub struct PlayerScore(pub u32);
 
@@ -115,11 +111,16 @@ fn move_player(
     mut player_transform: Single<&mut Transform, With<Player>>,
     mut player_tail: Query<&mut Transform, (With<PlayerSegment>, Without<Player>)>,
 
-    mut movement_timer: ResMut<MovementTimer>,
+    mut movement_timer: Local<Option<Timer>>,
     time: Res<Time>,
 ) {
-    /* slowing down the player movement */
-    if !(movement_timer.0.tick(time.delta()).just_finished()) {
+    /* initialize movement timer if it is empty */
+    movement_timer.get_or_insert(Timer::from_seconds(MOVEMENT_SPEED, TimerMode::Repeating));
+
+    /* slows down the player so that the player gets moved only once every MOVEMENT_SPEED seconds */
+    /* movement_timer used to be a resource but then i found out about Locals and thought this would be better since that resource only ever got used in this system */
+    /* using unwrap() here is fine as movement_timer is always valid as it was just initialized above */
+    if !(movement_timer.as_mut().unwrap().tick(time.delta()).just_finished()) {
         return;
     }
     
