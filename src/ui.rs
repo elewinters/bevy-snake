@@ -7,7 +7,7 @@ pub struct UIPlugin;
 
 impl Plugin for UIPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, setup);
+        app.add_systems(crate::SpawnSchedule, spawn_score_text);
         app.add_systems(Update, (update_score_display, try_again_button));
     }
 }
@@ -23,7 +23,7 @@ struct ScoreDisplay;
 /* ------------------ */
 
 /* this just spawns the score text thingy on the bottom left, which will then be updated by update_score_display */
-fn setup(mut commands: Commands) {
+fn spawn_score_text(mut commands: Commands) {
     commands.spawn((
         ScoreDisplay,
 

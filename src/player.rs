@@ -10,7 +10,7 @@ const MOVEMENT_SPEED: f32 = 0.15;
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_player);
+        app.add_systems(crate::SpawnSchedule, spawn_player);
 
         app.add_systems(Update, (
             change_direction, 

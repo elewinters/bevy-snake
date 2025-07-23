@@ -8,7 +8,7 @@ pub struct ApplePlugin;
 
 impl Plugin for ApplePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, startup);
+        app.add_systems(crate::SpawnSchedule, spawn_apple);
     }
 }
 
@@ -21,9 +21,6 @@ pub struct Apple();
 /* ------------------ */
 /*      functions     */
 /* ------------------ */
-fn startup(mut commands: Commands) {
-    commands.run_system_cached(spawn_apple);
-}
 
 /* generate a random position that is properly aligned/tiled with the playarea */
 /* we convert a lot between ints and floats here because rand can only generate random ints */

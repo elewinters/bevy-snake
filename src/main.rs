@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy::color::palettes::css::*;
+use bevy::ecs::schedule::ScheduleLabel;
 
 mod player;
 mod apple;
@@ -15,6 +16,12 @@ pub const PLAYAREA_Y: f32 = 300.;
 
 /* play area has to be divisible by the tile_size for tiling to work */
 pub const TILE_SIZE: f32 = 30.;
+
+/* ------------------ */
+/*      schedules     */
+/* ------------------ */
+#[derive(ScheduleLabel, Hash, Debug, PartialEq, Eq, Clone)]
+pub struct SpawnSchedule;
 
 /* ------------------ */
 /*      functions     */
@@ -42,6 +49,9 @@ fn setup(mut commands: Commands, mut window: Single<&mut Window>) {
 
     /* spawn camera with a white background (specified in main) */
     commands.spawn(Camera2d);
+    
+    /* spawn everything that needs to be spawned */
+    commands.run_schedule(SpawnSchedule);
 }
 
 pub fn despawn_all_entities(
@@ -56,13 +66,10 @@ pub fn despawn_all_entities(
 
 pub fn respawn_entities(
     mut commands: Commands,
-
     mut score: ResMut<player::PlayerScore>,
-    camera: Single<Entity, With<Camera2d>>
 ) {
     commands.run_system_cached(despawn_all_entities);
-    commands.entity(*camera).despawn(); /* we despawn the camera as a new one will get created once main's startup runs, which will cause multiple cameras to exist */
     score.0 = 0;
 
-    commands.run_schedule(Startup);
+    commands.run_schedule(SpawnSchedule);
 }
