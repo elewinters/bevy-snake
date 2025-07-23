@@ -50,8 +50,8 @@ fn setup(mut commands: Commands, mut window: Single<&mut Window>) {
     /* spawn camera with a white background (specified in main) */
     commands.spawn(Camera2d);
     
-    /* spawn everything that needs to be spawned */
-    commands.run_schedule(SpawnSchedule);
+    /* spawn the start menu first, which will then spawn everything for us */
+    commands.run_system_cached(ui::spawn_start_menu);
 }
 
 pub fn despawn_all_entities(
