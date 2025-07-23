@@ -3,6 +3,8 @@
 i made this mostly just to learn bevy nd im really not sure how optimally ive done a lot of things but i tried my best!
 includes some UI, such as a main menu to start the game, a display for the player's score, as well as a game over UI to restart the game once you die
 
+you can download the game in the releases tab, or play it on the web too at https://elewinters.github.io/bevy-snake-wasm/
+
 <p align="center">
     <img width="270" height="270" alt="image" src="https://github.com/user-attachments/assets/4b0a1466-e20d-4f20-9ee7-b789f58217e9" /> 
     <img width="270" height="270" alt="image" src="https://github.com/user-attachments/assets/7b147ce7-21c3-440f-9446-88033122dab9" />
