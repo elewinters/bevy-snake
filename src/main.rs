@@ -54,11 +54,12 @@ fn setup(mut commands: Commands, mut window: Single<&mut Window>) {
     commands.run_system_cached(ui::spawn_start_menu);
 }
 
+/* despawn all entities that have a Transform component (which are all entities that you can see in world space) */
+/* with the exception of the Camera */
 pub fn despawn_all_entities(
     mut commands: Commands, 
-    query: Query<Entity, Or<(With<Mesh2d>, With<Node>)>>
+    query: Query<Entity, (With<Transform>, Without<Camera>)>
 ) {
-    /* despawn all visible entities */
     for entity in query.iter() {
         commands.entity(entity).try_despawn();
     }
