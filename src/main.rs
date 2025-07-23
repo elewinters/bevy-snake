@@ -1,3 +1,6 @@
+/* disable console window on windows when in release mode */
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 use bevy::prelude::*;
 use bevy::color::palettes::css::*;
 use bevy::ecs::schedule::ScheduleLabel;
