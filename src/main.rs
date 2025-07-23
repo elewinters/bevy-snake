@@ -11,17 +11,17 @@ mod ui;
 /* ------------------------- */
 
 /* window size is calculated based on the play area */
-pub const PLAYAREA_X: f32 = 300.;
-pub const PLAYAREA_Y: f32 = 300.;
+const PLAYAREA_X: f32 = 300.;
+const PLAYAREA_Y: f32 = 300.;
 
 /* play area has to be divisible by the tile_size for tiling to work */
-pub const TILE_SIZE: f32 = 30.;
+const TILE_SIZE: f32 = 30.;
 
 /* ------------------ */
 /*      schedules     */
 /* ------------------ */
 #[derive(ScheduleLabel, Hash, Debug, PartialEq, Eq, Clone)]
-pub struct SpawnSchedule;
+struct SpawnSchedule;
 
 /* ------------------ */
 /*      functions     */
@@ -53,7 +53,7 @@ fn setup(mut commands: Commands, mut window: Single<&mut Window>) {
 
 /* despawn all entities that have a Transform component (which are all entities that you can see in world space) */
 /* with the exception of the Camera */
-pub fn despawn_all_entities(
+fn despawn_all_entities(
     mut commands: Commands, 
     query: Query<Entity, (With<Transform>, Without<Camera>)>
 ) {
@@ -62,7 +62,7 @@ pub fn despawn_all_entities(
     }
 }
 
-pub fn respawn_entities(
+fn respawn_entities(
     mut commands: Commands,
     mut score: ResMut<player::PlayerScore>,
 ) {

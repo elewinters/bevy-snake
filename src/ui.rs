@@ -83,7 +83,7 @@ fn update_score_display(
 
 /* called only once at Startup */
 /* button logic for these is handled in restart_button and quit_button */
-pub fn spawn_start_menu(mut commands: Commands) {
+fn spawn_start_menu(mut commands: Commands) {
     commands.spawn((
         Node {
             width: Val::Percent(100.0),
