@@ -49,9 +49,6 @@ fn setup(mut commands: Commands, mut window: Single<&mut Window>) {
 
     /* spawn camera with a white background (specified in main) */
     commands.spawn(Camera2d);
-    
-    /* spawn the start menu first, which will then spawn everything for us */
-    commands.run_system_cached(ui::spawn_start_menu);
 }
 
 /* despawn all entities that have a Transform component (which are all entities that you can see in world space) */

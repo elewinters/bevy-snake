@@ -8,6 +8,7 @@ pub struct UIPlugin;
 impl Plugin for UIPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(crate::SpawnSchedule, spawn_score_text);
+        app.add_systems(Startup, spawn_start_menu);
         app.add_systems(Update, (
             update_score_display, 
             restart_button,
