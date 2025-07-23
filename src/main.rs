@@ -60,7 +60,7 @@ pub fn despawn_all_entities(
 ) {
     /* despawn all visible entities */
     for entity in query.iter() {
-        commands.entity(entity).despawn();
+        commands.entity(entity).try_despawn();
     }
 }
 
