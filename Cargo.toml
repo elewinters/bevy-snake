@@ -7,8 +7,22 @@ edition = "2024"
 bevy = { version = "0.16.1" }
 rand = "0.9.1"
 
+# enable basic optimizations for debug, this actually helps improve compile times
 [profile.dev]
 opt-level = 1
 
 [profile.dev.package."*"]
 opt-level = 3
+
+# optimize for file size in the release (this is fine as performance is not a big concern)
+[profile.release]
+opt-level = 's'
+lto = true
+codegen-units = 1
+
+# wasm stuff
+# NOTE!!! you have to have the environment variable RUSTFLAGS set to --cfg getrandom_backend="wasm_js" for this to compile correctly for wasm
+# (this looks like set RUSTFLAGS=--cfg getrandom_backend="wasm_js" on windows)   
+# either that or put a rustflags for wasm with that config in your .cargo/config.toml  
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+getrandom = { version = "0.3.3", default-features = false, features = ["wasm_js"] }
