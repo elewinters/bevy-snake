@@ -1,9 +1,7 @@
 use bevy::prelude::*;
 use bevy::color::palettes::css::*;
 
-use crate::apple;
-use crate::GameState;
-use crate::{PLAYAREA_X, PLAYAREA_Y, TILE_SIZE};
+use crate::*;
 
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {

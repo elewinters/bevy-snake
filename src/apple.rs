@@ -1,10 +1,9 @@
 use rand::Rng;
+
 use bevy::prelude::*;
 use bevy::color::palettes::css::*;
 
-use crate::player;
-use crate::GameState;
-use crate::{PLAYAREA_X, PLAYAREA_Y, TILE_SIZE};
+use crate::*;
 
 pub struct ApplePlugin;
 impl Plugin for ApplePlugin {

@@ -1,8 +1,7 @@
 use bevy::prelude::*;
 use bevy::color::palettes::css::*;
 
-use crate::player;
-use crate::GameState;
+use crate::*;
 
 pub struct UIPlugin;
 impl Plugin for UIPlugin {
