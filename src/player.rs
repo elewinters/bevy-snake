@@ -25,9 +25,9 @@ impl Plugin for PlayerPlugin {
     }
 }
 
-/* ---------------------- */
-/*      non ECS stuff     */
-/* ---------------------- */
+/* -------------- */
+/*      enums     */
+/* -------------- */
 #[derive(Debug)]
 enum PlayerDirection {
     Up,
