@@ -7,7 +7,6 @@ use crate::GameState;
 use crate::{PLAYAREA_X, PLAYAREA_Y, TILE_SIZE};
 
 pub struct ApplePlugin;
-
 impl Plugin for ApplePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::InGame), spawn_apple);

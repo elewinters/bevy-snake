@@ -5,7 +5,6 @@ use crate::player;
 use crate::GameState;
 
 pub struct UIPlugin;
-
 impl Plugin for UIPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::InGame), spawn_score_display);
