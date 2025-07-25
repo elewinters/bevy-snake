@@ -8,16 +8,16 @@ mod player;
 mod apple;
 mod ui;
 
-/* ------------------------- */
-/*      global constants     */
-/* ------------------------- */
+/* ------------------ */
+/*      constants     */
+/* ------------------ */
 
 /* window size is calculated based on the play area */
-const PLAYAREA_X: f32 = 300.;
-const PLAYAREA_Y: f32 = 300.;
+pub const PLAYAREA_X: f32 = 300.;
+pub const PLAYAREA_Y: f32 = 300.;
 
 /* play area has to be divisible by the tile_size for tiling to work */
-const TILE_SIZE: f32 = 30.;
+pub const TILE_SIZE: f32 = 30.;
 
 /* --------------- */
 /*      states     */

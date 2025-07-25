@@ -28,6 +28,12 @@ impl Plugin for UIPlugin {
     }
 }
 
+/* ------------------ */
+/*      constants     */
+/* ------------------ */
+const NORMAL_BUTTON_COLOR: Srgba = GREY;
+const HOVERED_BUTTON_COLOR: Srgba = BLACK;
+
 /* --------------- */
 /*      macros     */
 /* --------------- */
@@ -147,7 +153,7 @@ fn spawn_main_menu(mut commands: Commands) {
                 RestartButton,
 
                 Text::new("ok"),
-                TextColor::from(GREY)
+                TextColor::from(NORMAL_BUTTON_COLOR)
             ),
         ]
     ));
@@ -159,7 +165,7 @@ fn spawn_main_menu(mut commands: Commands) {
         QuitButton,
 
         Text::new("no thanks"),
-        TextColor::from(GREY)
+        TextColor::from(NORMAL_BUTTON_COLOR)
     ));
 }
 
@@ -197,7 +203,7 @@ fn spawn_gameover_ui(
                 RestartButton,
 
                 Text::new("try again"),
-                TextColor::from(GREY)
+                TextColor::from(NORMAL_BUTTON_COLOR)
             )
         ]
     ));
@@ -210,10 +216,10 @@ fn button_highlighting(
     for (interaction, mut text_color) in interaction_query {
         match *interaction {
             Interaction::Hovered => {
-                *text_color = TextColor::from(BLACK);
+                *text_color = TextColor::from(HOVERED_BUTTON_COLOR);
             }
             Interaction::None => {
-                *text_color = TextColor::from(GREY);
+                *text_color = TextColor::from(NORMAL_BUTTON_COLOR);
             }
             Interaction::Pressed => ()
         }
