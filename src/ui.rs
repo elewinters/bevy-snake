@@ -229,13 +229,10 @@ fn button_highlighting(
 fn restart_button(
     mut next_state: ResMut<NextState<GameState>>,
     interaction_query: Query<&Interaction, (Changed<Interaction>, With<RestartButton>)>,
-
-    mut score: ResMut<player::PlayerScore>
 ) {
     for interaction in interaction_query {
         if *interaction == Interaction::Pressed {
             next_state.set(GameState::InGame);
-            score.0 = 0;
         }
     }
 }

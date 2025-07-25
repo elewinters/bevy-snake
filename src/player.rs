@@ -61,7 +61,11 @@ fn spawn_player(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
+
+    mut score: ResMut<PlayerScore>
 ) {
+    score.0 = 0;
+
     commands.spawn((
         Player(PlayerDirection::Right),
 
