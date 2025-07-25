@@ -5,9 +5,6 @@ use crate::apple;
 use crate::GameState;
 use crate::{PLAYAREA_X, PLAYAREA_Y, TILE_SIZE};
 
-/* in milliseconds, the higher the number the slower the player moves */
-const MOVEMENT_SPEED: f32 = 0.15;
-
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
@@ -24,6 +21,13 @@ impl Plugin for PlayerPlugin {
         app.insert_resource(PlayerScore(0));
     }
 }
+
+/* ------------------ */
+/*      constants     */
+/* ------------------ */
+
+/* in milliseconds, the higher the number the slower the player moves */
+const MOVEMENT_SPEED: f32 = 0.15;
 
 /* -------------- */
 /*      enums     */
