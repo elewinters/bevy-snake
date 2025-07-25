@@ -54,9 +54,9 @@ pub struct PlayerSegment();
 #[derive(Resource)]
 pub struct PlayerScore(pub u32);
 
-/* ------------------ */
-/*      functions     */
-/* ------------------ */
+/* ---------------- */
+/*      systems     */
+/* ---------------- */
 fn spawn_player(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,

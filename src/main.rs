@@ -48,6 +48,9 @@ fn main() {
         .run();
 }
 
+/* ---------------- */
+/*      systems     */
+/* ---------------- */
 fn setup(mut commands: Commands, mut window: Single<&mut Window>) {
     /* set up the window correctly */
     window.resolution.set(PLAYAREA_X * 2. + TILE_SIZE, PLAYAREA_Y * 2. + TILE_SIZE);

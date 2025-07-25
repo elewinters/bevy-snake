@@ -70,9 +70,9 @@ struct RestartButton;
 #[derive(Component)]
 struct QuitButton;
 
-/* ------------------ */
-/*      functions     */
-/* ------------------ */
+/* ---------------- */
+/*      systems     */
+/* ---------------- */
 
 /* this just spawns the score text thingy on the bottom left, which will then be updated by update_score_display */
 fn spawn_score_display(mut commands: Commands) {

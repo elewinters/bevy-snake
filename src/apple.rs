@@ -44,6 +44,10 @@ fn generate_random_position() -> Vec3 {
     Vec3::new(x as f32, y as f32, 0.0)
 }
 
+/* ---------------- */
+/*      systems     */
+/* ---------------- */
+
 /* spawns an apple at a random location */
 pub fn spawn_apple(
     mut commands: Commands,
