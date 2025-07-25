@@ -7,10 +7,12 @@ use crate::GameState;
 pub struct UIPlugin;
 impl Plugin for UIPlugin {
     fn build(&self, app: &mut App) {
+        /* spawning */
         app.add_systems(OnEnter(GameState::InGame), spawn_score_display);
         app.add_systems(OnEnter(GameState::GameOver), spawn_gameover_ui);
         app.add_systems(OnEnter(GameState::MainMenu), spawn_main_menu);
 
+        /* despawning */
         app.add_systems(OnExit(GameState::InGame), despawn_ui);
         app.add_systems(OnExit(GameState::GameOver), despawn_ui);
         app.add_systems(OnExit(GameState::MainMenu), despawn_ui);
@@ -87,22 +89,6 @@ fn spawn_score_display(mut commands: Commands) {
         Text::new("score: N/A"),
         TextColor::from(BLACK)
     ));
-}
-
-fn despawn_ui(
-    mut commands: Commands,
-    node_entities: Query<Entity, With<Node>>
-) {
-    for entity in node_entities.iter() {
-        commands.entity(entity).try_despawn();
-    }
-}
-
-fn update_score_display(
-    mut text: Single<&mut Text, With<ScoreDisplay>>,
-    score: Res<player::PlayerScore>
-) {
-    **text = Text::new(format!("score: {}", score.0));
 }
 
 /* button logic for these is handled in restart_button and quit_button */
@@ -206,6 +192,22 @@ fn spawn_gameover_ui(
             )
         ]
     ));
+}
+
+fn despawn_ui(
+    mut commands: Commands,
+    node_entities: Query<Entity, With<Node>>
+) {
+    for entity in node_entities.iter() {
+        commands.entity(entity).try_despawn();
+    }
+}
+
+fn update_score_display(
+    mut text: Single<&mut Text, With<ScoreDisplay>>,
+    score: Res<player::PlayerScore>
+) {
+    **text = Text::new(format!("score: {}", score.0));
 }
 
 /* change the text color of the button when hovered */
