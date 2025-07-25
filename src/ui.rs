@@ -7,14 +7,14 @@ pub struct UIPlugin;
 impl Plugin for UIPlugin {
     fn build(&self, app: &mut App) {
         /* spawning */
+        app.add_systems(OnEnter(GameState::MainMenu), spawn_main_menu);
         app.add_systems(OnEnter(GameState::InGame), spawn_score_display);
         app.add_systems(OnEnter(GameState::GameOver), spawn_gameover_ui);
-        app.add_systems(OnEnter(GameState::MainMenu), spawn_main_menu);
 
         /* despawning */
+        app.add_systems(OnExit(GameState::MainMenu), despawn_ui);
         app.add_systems(OnExit(GameState::InGame), despawn_ui);
         app.add_systems(OnExit(GameState::GameOver), despawn_ui);
-        app.add_systems(OnExit(GameState::MainMenu), despawn_ui);
 
         /* only update score display if in game */
         app.add_systems(Update, update_score_display.run_if(in_state(GameState::InGame)));
@@ -73,22 +73,6 @@ struct QuitButton;
 /* ---------------- */
 /*      systems     */
 /* ---------------- */
-
-/* this just spawns the score text thingy on the bottom left, which will then be updated by update_score_display */
-fn spawn_score_display(mut commands: Commands) {
-    commands.spawn((
-        ScoreDisplay,
-
-        Node {
-            position_type: PositionType::Absolute,
-            bottom: Val::Px(5.),
-            left: Val::Px(5.0),
-            ..default()
-        },
-        Text::new("score: N/A"),
-        TextColor::from(BLACK)
-    ));
-}
 
 /* button logic for these is handled in restart_button and quit_button */
 fn spawn_main_menu(mut commands: Commands) {
@@ -150,6 +134,22 @@ fn spawn_main_menu(mut commands: Commands) {
 
         Text::new("no thanks"),
         TextColor::from(NORMAL_BUTTON_COLOR)
+    ));
+}
+
+/* this just spawns the score text thingy on the bottom left, which will then be updated by update_score_display */
+fn spawn_score_display(mut commands: Commands) {
+    commands.spawn((
+        ScoreDisplay,
+
+        Node {
+            position_type: PositionType::Absolute,
+            bottom: Val::Px(5.),
+            left: Val::Px(5.0),
+            ..default()
+        },
+        Text::new("score: N/A"),
+        TextColor::from(BLACK)
     ));
 }
 
