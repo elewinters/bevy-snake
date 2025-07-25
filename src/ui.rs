@@ -22,7 +22,7 @@ impl Plugin for UIPlugin {
         /* we update these regardless what state we're in as these systems should run in both MainMenu and GameOver states */
         app.add_systems(Update, (
             button_highlighting,
-            restart_button,
+            ingame_button,
             quit_button,
         ));
     }
@@ -65,7 +65,7 @@ macro_rules! font_size {
 struct ScoreDisplay;
 
 #[derive(Component)]
-struct RestartButton;
+struct InGameButton;
 
 #[derive(Component)]
 struct QuitButton;
@@ -74,7 +74,7 @@ struct QuitButton;
 /*      systems     */
 /* ---------------- */
 
-/* button logic for these is handled in restart_button and quit_button */
+/* button logic for these is handled in ingame_button and quit_button */
 fn spawn_main_menu(mut commands: Commands) {
     let mut menu = commands.spawn((
         Node {
@@ -118,7 +118,7 @@ fn spawn_main_menu(mut commands: Commands) {
                 add_padding!(2.),
 
                 Button,
-                RestartButton,
+                InGameButton,
 
                 Text::new("ok"),
                 TextColor::from(NORMAL_BUTTON_COLOR)
@@ -153,7 +153,7 @@ fn spawn_score_display(mut commands: Commands) {
     ));
 }
 
-/* try again button logic is handled in restart_button below */
+/* try again button logic is handled in ingame_button below */
 fn spawn_gameover_ui(
     mut commands: Commands, 
     score: Res<player::PlayerScore>
@@ -184,7 +184,7 @@ fn spawn_gameover_ui(
             ),
             (
                 Button,
-                RestartButton,
+                InGameButton,
 
                 Text::new("try again"),
                 TextColor::from(NORMAL_BUTTON_COLOR)
@@ -227,9 +227,9 @@ fn button_highlighting(
 }
 
 /* this handles the "ok" button and the "try again" button, as both of them do the same thing of setting the state to InGame */
-fn restart_button(
+fn ingame_button(
     mut next_state: ResMut<NextState<GameState>>,
-    interaction_query: Query<&Interaction, (Changed<Interaction>, With<RestartButton>)>,
+    interaction_query: Query<&Interaction, (Changed<Interaction>, With<InGameButton>)>,
 ) {
     for interaction in interaction_query {
         if *interaction == Interaction::Pressed {
