@@ -71,8 +71,6 @@ pub fn spawn_apple(
         MeshMaterial2d(materials.add(Color::from(INDIAN_RED))),
         Transform::from_translation(position)
     ));
-
-    println!("apple spawned at: {}, {}", position.x, position.y);
 }
 
 fn despawn_apple(

@@ -194,7 +194,6 @@ fn detect_apple_collision(
 
         commands.run_system_cached(apple::spawn_apple);
         commands.run_system_cached(spawn_segment);
-        println!("apples eaten: {}", score.0);
     }
 }
 
