@@ -1,14 +1,17 @@
 use rand::Rng;
 use bevy::prelude::*;
 use bevy::color::palettes::css::*;
+
 use crate::player;
+use crate::GameState;
 use crate::{PLAYAREA_X, PLAYAREA_Y, TILE_SIZE};
 
 pub struct ApplePlugin;
 
 impl Plugin for ApplePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(crate::SpawnSchedule, spawn_apple);
+        app.add_systems(OnEnter(GameState::InGame), spawn_apple);
+        app.add_systems(OnExit(GameState::InGame), despawn_apple);
     }
 }
 
@@ -68,4 +71,11 @@ pub fn spawn_apple(
     ));
 
     println!("apple spawned at: {}, {}", position.x, position.y);
+}
+
+fn despawn_apple(
+    mut commands: Commands,
+    apple: Single<Entity, With<Apple>>
+) {
+    commands.entity(*apple).despawn();
 }

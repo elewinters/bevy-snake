@@ -2,18 +2,28 @@ use bevy::prelude::*;
 use bevy::color::palettes::css::*;
 
 use crate::player;
+use crate::GameState;
 
 pub struct UIPlugin;
 
 impl Plugin for UIPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(crate::SpawnSchedule, spawn_score_display);
-        app.add_systems(Startup, spawn_start_menu);
+        app.add_systems(OnEnter(GameState::InGame), spawn_score_display);
+        app.add_systems(OnEnter(GameState::GameOver), spawn_gameover_ui);
+        app.add_systems(OnEnter(GameState::MainMenu), spawn_main_menu);
+
+        app.add_systems(OnExit(GameState::InGame), despawn_ui);
+        app.add_systems(OnExit(GameState::GameOver), despawn_ui);
+        app.add_systems(OnExit(GameState::MainMenu), despawn_ui);
+
+        /* only update score display if in game */
+        app.add_systems(Update, update_score_display.run_if(in_state(GameState::InGame)));
+
+        /* we update these regardless what state we're in as these systems should run in both MainMenu and GameOver states */
         app.add_systems(Update, (
-            update_score_display, 
+            button_highlighting,
             restart_button,
             quit_button,
-            button_highlighting
         ));
     }
 }
@@ -74,6 +84,15 @@ fn spawn_score_display(mut commands: Commands) {
     ));
 }
 
+fn despawn_ui(
+    mut commands: Commands,
+    node_entities: Query<Entity, With<Node>>
+) {
+    for entity in node_entities.iter() {
+        commands.entity(entity).try_despawn();
+    }
+}
+
 fn update_score_display(
     mut text: Single<&mut Text, With<ScoreDisplay>>,
     score: Res<player::PlayerScore>
@@ -81,10 +100,9 @@ fn update_score_display(
     **text = Text::new(format!("score: {}", score.0));
 }
 
-/* called only once at Startup */
 /* button logic for these is handled in restart_button and quit_button */
-fn spawn_start_menu(mut commands: Commands) {
-    commands.spawn((
+fn spawn_main_menu(mut commands: Commands) {
+    let mut menu = commands.spawn((
         Node {
             width: Val::Percent(100.0),
             height: Val::Percent(90.0),
@@ -131,20 +149,22 @@ fn spawn_start_menu(mut commands: Commands) {
                 Text::new("ok"),
                 TextColor::from(GREY)
             ),
-            (
-                Button,
-                QuitButton,
-
-                Text::new("no thanks"),
-                TextColor::from(GREY)
-            )
         ]
+    ));
+
+    /* do not spawn the "no thanks" button on wasm, as this button just crashes the tab on wasm */
+    #[cfg(not(target_arch = "wasm32"))]
+    menu.with_child((
+        Button,
+        QuitButton,
+
+        Text::new("no thanks"),
+        TextColor::from(GREY)
     ));
 }
 
-/* spawn a game over UI where the user can restart the game (called by player::handle_death) */
 /* try again button logic is handled in restart_button below */
-pub fn spawn_gameover_ui(
+fn spawn_gameover_ui(
     mut commands: Commands, 
     score: Res<player::PlayerScore>
 ) {
@@ -183,30 +203,6 @@ pub fn spawn_gameover_ui(
     ));
 }
 
-/* this handles the "ok" button and the "try again" button, as both of them do the same thing of spawning all entities that we need */
-fn restart_button(
-    mut commands: Commands, 
-    interaction_query: Query<&Interaction, (Changed<Interaction>, With<RestartButton>)>
-) {
-    for interaction in interaction_query {
-        if *interaction == Interaction::Pressed {
-            commands.run_system_cached(crate::respawn_entities);
-        }
-    }
-}
-
-/* handles clicking the "no thanks" button */
-fn quit_button(
-    mut commands: Commands, 
-    interaction_query: Query<&Interaction, (Changed<Interaction>, With<QuitButton>)>
-) {
-    for interaction in interaction_query {
-        if *interaction == Interaction::Pressed {
-            commands.send_event(AppExit::Success);
-        }
-    }
-}
-
 /* change the text color of the button when hovered */
 fn button_highlighting(
     interaction_query: Query<(&Interaction, &mut TextColor), (Changed<Interaction>, With<Button>)>
@@ -220,6 +216,34 @@ fn button_highlighting(
                 *text_color = TextColor::from(GREY);
             }
             Interaction::Pressed => ()
+        }
+    }
+}
+
+/* this handles the "ok" button and the "try again" button, as both of them do the same thing of setting the state to InGame */
+fn restart_button(
+    mut next_state: ResMut<NextState<GameState>>,
+    interaction_query: Query<&Interaction, (Changed<Interaction>, With<RestartButton>)>,
+
+    mut score: ResMut<player::PlayerScore>
+) {
+    for interaction in interaction_query {
+        if *interaction == Interaction::Pressed {
+            next_state.set(GameState::InGame);
+            score.0 = 0;
+        }
+    }
+}
+
+/* handles clicking the "no thanks" button */
+/* this button doesn't exist on wasm but thats fine as this system just wont be ran on wasm */
+fn quit_button(
+    mut commands: Commands, 
+    interaction_query: Query<&Interaction, (Changed<Interaction>, With<QuitButton>)>
+) {
+    for interaction in interaction_query {
+        if *interaction == Interaction::Pressed {
+            commands.send_event(AppExit::Success);
         }
     }
 }

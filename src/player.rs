@@ -1,7 +1,8 @@
 use bevy::prelude::*;
 use bevy::color::palettes::css::*;
 
-use crate::{apple, ui};
+use crate::apple;
+use crate::GameState;
 use crate::{PLAYAREA_X, PLAYAREA_Y, TILE_SIZE};
 
 /* in milliseconds, the higher the number the slower the player moves */
@@ -10,14 +11,15 @@ const MOVEMENT_SPEED: f32 = 0.15;
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(crate::SpawnSchedule, spawn_player);
+        app.add_systems(OnEnter(GameState::InGame), spawn_player);
+        app.add_systems(OnExit(GameState::InGame), despawn_player);
 
         app.add_systems(Update, (
             change_direction, 
             move_player, 
             detect_apple_collision, 
             detect_segment_collision,
-        ));
+        ).run_if(in_state(GameState::InGame)));
 
         app.insert_resource(PlayerScore(0));
     }
@@ -70,6 +72,15 @@ fn spawn_player(
 
     /* we spawn one segment as well so that the player isnt just a single lonely cube */
     commands.run_system_cached(spawn_segment);
+}
+
+fn despawn_player(
+    mut commands: Commands,
+    query: Query<Entity, Or<(With<Player>, With<PlayerSegment>)>>,
+) {
+    for entity in query.iter() {
+        commands.entity(entity).try_despawn();
+    }
 }
 
 fn change_direction(
@@ -158,8 +169,6 @@ fn move_player(
     if player_transform.translation.y < -(PLAYAREA_Y + TILE_SIZE) {
         player_transform.translation.y = PLAYAREA_Y;
     }
-
-    //println!("player is at {}", player_transform.translation);
 }
 
 fn detect_apple_collision(
@@ -200,21 +209,16 @@ fn spawn_segment(
     ));
 }
 
-/* detect if the player has hit their own tail, and run the handle_death system */
+/* detect if the player has hit their own tail, and set the gamestate to GameOver if we have */
 fn detect_segment_collision(
-    mut commands: Commands,
+    mut next_state: ResMut<NextState<GameState>>,
 
     player_transform: Single<&Transform, With<Player>>,
     player_tail: Query<&Transform, (With<PlayerSegment>, Without<Player>)>,
 ) {
     for segment_transform in player_tail.iter() {
         if player_transform.translation == segment_transform.translation {
-            commands.run_system_cached(handle_death);
+            next_state.set(GameState::GameOver);
         }
     }
-}
-
-fn handle_death(mut commands: Commands ) {
-    commands.run_system_cached(crate::despawn_all_entities);
-    commands.run_system_cached(ui::spawn_gameover_ui);
 }

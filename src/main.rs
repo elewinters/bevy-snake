@@ -3,7 +3,6 @@
 
 use bevy::prelude::*;
 use bevy::color::palettes::css::*;
-use bevy::ecs::schedule::ScheduleLabel;
 
 mod player;
 mod apple;
@@ -20,11 +19,16 @@ const PLAYAREA_Y: f32 = 300.;
 /* play area has to be divisible by the tile_size for tiling to work */
 const TILE_SIZE: f32 = 30.;
 
-/* ------------------ */
-/*      schedules     */
-/* ------------------ */
-#[derive(ScheduleLabel, Hash, Debug, PartialEq, Eq, Clone)]
-struct SpawnSchedule;
+/* --------------- */
+/*      states     */
+/* --------------- */
+#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
+pub enum GameState {
+    #[default]
+    MainMenu,
+    InGame,
+    GameOver,
+}
 
 /* ------------------ */
 /*      functions     */
@@ -38,6 +42,7 @@ fn main() {
             ui::UIPlugin
         ))
         .add_systems(Startup, setup)
+        .init_state::<GameState>()
 
         .insert_resource(ClearColor(Color::from(WHITE))) /* white background */
         .run();
@@ -52,25 +57,4 @@ fn setup(mut commands: Commands, mut window: Single<&mut Window>) {
 
     /* spawn camera with a white background (specified in main) */
     commands.spawn(Camera2d);
-}
-
-/* despawn all entities that have a Transform component (which are all entities that you can see in world space) */
-/* with the exception of the Camera */
-fn despawn_all_entities(
-    mut commands: Commands, 
-    query: Query<Entity, (With<Transform>, Without<Camera>)>
-) {
-    for entity in query.iter() {
-        commands.entity(entity).try_despawn();
-    }
-}
-
-fn respawn_entities(
-    mut commands: Commands,
-    mut score: ResMut<player::PlayerScore>,
-) {
-    commands.run_system_cached(despawn_all_entities);
-    score.0 = 0;
-
-    commands.run_schedule(SpawnSchedule);
 }
