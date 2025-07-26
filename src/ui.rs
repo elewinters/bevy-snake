@@ -11,11 +11,6 @@ impl Plugin for UIPlugin {
         app.add_systems(OnEnter(GameState::InGame), spawn_score_display);
         app.add_systems(OnEnter(GameState::GameOver), spawn_gameover_ui);
 
-        /* despawning */
-        app.add_systems(OnExit(GameState::MainMenu), despawn_ui);
-        app.add_systems(OnExit(GameState::InGame), despawn_ui);
-        app.add_systems(OnExit(GameState::GameOver), despawn_ui);
-
         /* only update score display if in game */
         app.add_systems(Update, update_score_display.run_if(in_state(GameState::InGame)));
 
@@ -77,6 +72,8 @@ struct QuitButton;
 /* button logic for these is handled in ingame_button and quit_button */
 fn spawn_main_menu(mut commands: Commands) {
     let mut menu = commands.spawn((
+        StateScoped(GameState::MainMenu),
+
         Node {
             width: Val::Percent(100.0),
             height: Val::Percent(90.0),
@@ -140,6 +137,7 @@ fn spawn_main_menu(mut commands: Commands) {
 /* this just spawns the score text thingy on the bottom left, which will then be updated by update_score_display */
 fn spawn_score_display(mut commands: Commands) {
     commands.spawn((
+        StateScoped(GameState::InGame),
         ScoreDisplay,
 
         Node {
@@ -159,6 +157,8 @@ fn spawn_gameover_ui(
     score: Res<player::PlayerScore>
 ) {
     commands.spawn((
+        StateScoped(GameState::GameOver),
+
         Node {
             width: Val::Percent(100.0),
             height: Val::Percent(90.0),
@@ -191,15 +191,6 @@ fn spawn_gameover_ui(
             )
         ]
     ));
-}
-
-fn despawn_ui(
-    mut commands: Commands,
-    node_entities: Query<Entity, With<Node>>
-) {
-    for entity in node_entities.iter() {
-        commands.entity(entity).try_despawn();
-    }
 }
 
 fn update_score_display(

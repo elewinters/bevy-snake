@@ -23,6 +23,7 @@ pub const TILE_SIZE: f32 = 30.;
 /*      states     */
 /* --------------- */
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
+#[states(scoped_entities)]
 pub enum GameState {
     #[default]
     MainMenu,

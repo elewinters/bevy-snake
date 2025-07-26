@@ -7,7 +7,7 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::InGame), spawn_player);
-        app.add_systems(OnExit(GameState::InGame), despawn_player);
+        app.add_systems(OnEnter(GameState::InGame), spawn_segment);
 
         app.add_systems(Update, (
             change_direction, 
@@ -69,24 +69,31 @@ fn spawn_player(
     score.0 = 0;
 
     commands.spawn((
+        StateScoped(GameState::InGame),
         Player(PlayerDirection::Right),
 
         Mesh2d(meshes.add(Rectangle::from_length(TILE_SIZE))),
         MeshMaterial2d(materials.add(Color::from(LIGHT_GREEN))),
         Transform::default()
     ));
-
-    /* we spawn one segment as well so that the player isnt just a single lonely cube */
-    commands.run_system_cached(spawn_segment);
 }
 
-fn despawn_player(
+/* this is where we extend the snake's tail */
+fn spawn_segment(
     mut commands: Commands,
-    query: Query<Entity, Or<(With<Player>, With<PlayerSegment>)>>,
+
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    for entity in query.iter() {
-        commands.entity(entity).try_despawn();
-    }
+    commands.spawn((
+        StateScoped(GameState::InGame),
+        PlayerSegment(),
+
+        Mesh2d(meshes.add(Rectangle::from_length(TILE_SIZE))),
+        MeshMaterial2d(materials.add(Color::from(LIGHT_GREEN))),
+        /* set the transform somewhere where it cant be seen cuz player movement will deal with it anyway */
+        Transform::from_xyz(10_000., 10_000., 0.)
+    ));
 }
 
 fn change_direction(
@@ -195,23 +202,6 @@ fn detect_apple_collision(
         commands.run_system_cached(apple::spawn_apple);
         commands.run_system_cached(spawn_segment);
     }
-}
-
-/* this is where we extend the snake's tail */
-fn spawn_segment(
-    mut commands: Commands,
-
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-) {
-    commands.spawn((
-        PlayerSegment(),
-
-        Mesh2d(meshes.add(Rectangle::from_length(TILE_SIZE))),
-        MeshMaterial2d(materials.add(Color::from(LIGHT_GREEN))),
-        /* set the transform somewhere where it cant be seen cuz player movement will deal with it anyway */
-        Transform::from_xyz(10_000., 10_000., 0.)
-    ));
 }
 
 /* detect if the player has hit their own tail, and set the gamestate to GameOver if we have */

@@ -9,7 +9,6 @@ pub struct ApplePlugin;
 impl Plugin for ApplePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::InGame), spawn_apple);
-        app.add_systems(OnExit(GameState::InGame), despawn_apple);
     }
 }
 
@@ -65,17 +64,11 @@ pub fn spawn_apple(
     }
 
     commands.spawn((
+        StateScoped(GameState::InGame),
         Apple(),
 
         Mesh2d(meshes.add(Rectangle::from_length(TILE_SIZE))),
         MeshMaterial2d(materials.add(Color::from(INDIAN_RED))),
         Transform::from_translation(position)
     ));
-}
-
-fn despawn_apple(
-    mut commands: Commands,
-    apple: Single<Entity, With<Apple>>
-) {
-    commands.entity(*apple).despawn();
 }
