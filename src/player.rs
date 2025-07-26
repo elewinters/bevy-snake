@@ -148,7 +148,8 @@ fn move_player(
         return;
     }
     
-    let mut prev_transform = player_transform.clone();
+    /* this creates a clone as Transform implements Clone */
+    let mut prev_transform = **player_transform;
 
     /* move head */
     match player.0 {
@@ -160,7 +161,7 @@ fn move_player(
 
     /* move segments */
     for mut segment_transform in player_tail.iter_mut() {
-        let prev = segment_transform.clone();
+        let prev = *segment_transform;
 
         segment_transform.translation.x = prev_transform.translation.x;
         segment_transform.translation.y = prev_transform.translation.y;

@@ -1,6 +1,9 @@
 /* disable console window on windows when in release mode */
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+/* dont warn about complex types (complex types are very common in bevy nd this is fine) */
+#![allow(clippy::type_complexity)]
+
 use bevy::prelude::*;
 use bevy::color::palettes::css::*;
 
