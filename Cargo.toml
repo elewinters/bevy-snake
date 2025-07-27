@@ -4,8 +4,26 @@ version = "1.0.0"
 edition = "2024"
 
 [dependencies]
-bevy = { version = "0.16.1" }
 rand = "0.9.1"
+
+[dependencies.bevy]
+version = "0.16.1"
+default-features = false
+features = [
+    "bevy_color",
+    "bevy_core_pipeline",
+    "bevy_render",
+    "bevy_state",
+    "bevy_text",
+    "bevy_ui",
+    "bevy_window",
+    "default_font",
+    "multi_threaded",
+    "std",
+    
+    "webgl2",
+    "x11"
+]
 
 # enable basic optimizations for debug, this actually helps improve compile times
 [profile.dev]
