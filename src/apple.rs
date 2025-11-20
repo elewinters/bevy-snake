@@ -16,7 +16,7 @@ impl Plugin for ApplePlugin {
 /*      components     */
 /* ------------------- */
 #[derive(Component)]
-pub struct Apple();
+pub struct Apple;
 
 /* ------------------ */
 /*      functions     */
@@ -65,7 +65,7 @@ pub fn spawn_apple(
 
     commands.spawn((
         DespawnOnExit(GameState::InGame),
-        Apple(),
+        Apple,
 
         Mesh2d(meshes.add(Rectangle::from_length(TILE_SIZE))),
         MeshMaterial2d(materials.add(Color::from(INDIAN_RED))),

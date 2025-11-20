@@ -48,7 +48,7 @@ pub struct Player(PlayerDirection);
 
 /* this component represents a piece of the snake's "tail" */
 #[derive(Component)]
-pub struct PlayerSegment();
+pub struct PlayerSegment;
 
 /* ------------------ */
 /*      resources     */
@@ -87,7 +87,7 @@ fn spawn_segment(
 ) {
     commands.spawn((
         DespawnOnExit(GameState::InGame),
-        PlayerSegment(),
+        PlayerSegment,
 
         Mesh2d(meshes.add(Rectangle::from_length(TILE_SIZE))),
         MeshMaterial2d(materials.add(Color::from(LIGHT_GREEN))),
