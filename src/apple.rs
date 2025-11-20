@@ -64,7 +64,7 @@ pub fn spawn_apple(
     }
 
     commands.spawn((
-        StateScoped(GameState::InGame),
+        DespawnOnExit(GameState::InGame),
         Apple(),
 
         Mesh2d(meshes.add(Rectangle::from_length(TILE_SIZE))),

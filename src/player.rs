@@ -69,7 +69,7 @@ fn spawn_player(
     score.0 = 0;
 
     commands.spawn((
-        StateScoped(GameState::InGame),
+        DespawnOnExit(GameState::InGame),
         Player(PlayerDirection::Right),
 
         Mesh2d(meshes.add(Rectangle::from_length(TILE_SIZE))),
@@ -86,7 +86,7 @@ fn spawn_segment(
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
     commands.spawn((
-        StateScoped(GameState::InGame),
+        DespawnOnExit(GameState::InGame),
         PlayerSegment(),
 
         Mesh2d(meshes.add(Rectangle::from_length(TILE_SIZE))),

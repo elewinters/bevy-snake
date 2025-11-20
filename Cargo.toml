@@ -7,7 +7,7 @@ edition = "2024"
 rand = "0.9.1"
 
 [dependencies.bevy]
-version = "0.16.1"
+version = "0.17.3"
 default-features = false
 features = [
     "bevy_color",
@@ -16,6 +16,7 @@ features = [
     "bevy_state",
     "bevy_text",
     "bevy_ui",
+    "bevy_ui_render",
     "bevy_window",
     "default_font",
     "multi_threaded",

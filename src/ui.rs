@@ -72,7 +72,7 @@ struct QuitButton;
 /* button logic for these is handled in ingame_button and quit_button */
 fn spawn_main_menu(mut commands: Commands) {
     let mut menu = commands.spawn((
-        StateScoped(GameState::MainMenu),
+        DespawnOnExit(GameState::MainMenu),
 
         Node {
             width: Val::Percent(100.0),
@@ -137,7 +137,7 @@ fn spawn_main_menu(mut commands: Commands) {
 /* this just spawns the score text thingy on the bottom left, which will then be updated by update_score_display */
 fn spawn_score_display(mut commands: Commands) {
     commands.spawn((
-        StateScoped(GameState::InGame),
+        DespawnOnExit(GameState::InGame),
         ScoreDisplay,
 
         Node {
@@ -157,7 +157,7 @@ fn spawn_gameover_ui(
     score: Res<player::PlayerScore>
 ) {
     commands.spawn((
-        StateScoped(GameState::GameOver),
+        DespawnOnExit(GameState::GameOver),
 
         Node {
             width: Val::Percent(100.0),
@@ -237,7 +237,7 @@ fn quit_button(
 ) {
     for interaction in interaction_query {
         if *interaction == Interaction::Pressed {
-            commands.send_event(AppExit::Success);
+            commands.write_message(AppExit::Success);
         }
     }
 }
