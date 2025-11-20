@@ -16,11 +16,11 @@ mod ui;
 /* ------------------ */
 
 /* window size is calculated based on the play area */
-pub const PLAYAREA_X: f32 = 300.;
-pub const PLAYAREA_Y: f32 = 300.;
+pub const PLAYAREA_X: f32 = 300.0;
+pub const PLAYAREA_Y: f32 = 300.0;
 
 /* play area has to be divisible by the tile_size for tiling to work */
-pub const TILE_SIZE: f32 = 30.;
+pub const TILE_SIZE: f32 = 30.0;
 
 /* --------------- */
 /*      states     */
@@ -57,7 +57,7 @@ fn main() {
 /* ---------------- */
 fn setup(mut commands: Commands, mut window: Single<&mut Window>) {
     /* set up the window correctly */
-    window.resolution.set(PLAYAREA_X * 2. + TILE_SIZE, PLAYAREA_Y * 2. + TILE_SIZE);
+    window.resolution.set(PLAYAREA_X * 2.0 + TILE_SIZE, PLAYAREA_Y * 2.0 + TILE_SIZE);
     window.title = String::from("snake");
     window.resizable = false;
     window.enabled_buttons.maximize = false;

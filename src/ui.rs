@@ -85,34 +85,34 @@ fn spawn_main_menu(mut commands: Commands) {
         },
         children![
             (
-                add_padding!(1.),
+                add_padding!(1.0),
 
                 Text::new("bevy_snake v1.2.0"),
                 TextColor::from(BLACK)
             ),
             (
-                add_padding!(1.),
-                font_size!(16.),
+                add_padding!(1.0),
+                font_size!(16.0),
 
                 Text::new("a snake clone made in bevy 0.17"),
                 TextColor::from(BLACK)
             ),
             (
-                add_padding!(1.),
-                font_size!(13.),
+                add_padding!(1.0),
+                font_size!(13.0),
 
                 Text::new("use WASD or arrow keys to move and collect apples to grow"),
                 TextColor::from(BLACK)
             ),
             (
-                add_padding!(3.),
-                font_size!(13.),
+                add_padding!(3.0),
+                font_size!(13.0),
 
                 Text::new("try not to hit your tail!"),
                 TextColor::from(BLACK)
             ),
             (
-                add_padding!(2.),
+                add_padding!(2.0),
 
                 Button,
                 InGameButton,
@@ -142,7 +142,7 @@ fn spawn_score_display(mut commands: Commands) {
 
         Node {
             position_type: PositionType::Absolute,
-            bottom: px(5.),
+            bottom: px(5.0),
             left: px(5.0),
             ..default()
         },
@@ -170,14 +170,14 @@ fn spawn_gameover_ui(
         },
         children![
             (
-                add_padding!(1.),
+                add_padding!(1.0),
                 
                 Text::new("woops, looks like you hit yourself!"),
                 TextColor::from(BLACK)
             ),
             (
-                add_padding!(1.),
-                font_size!(16.),
+                add_padding!(1.0),
+                font_size!(16.0),
 
                 Text::new(format!("score: {}", score.0)),
                 TextColor::from(BLACK)

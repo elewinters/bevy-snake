@@ -92,7 +92,7 @@ fn spawn_segment(
         Mesh2d(meshes.add(Rectangle::from_length(TILE_SIZE))),
         MeshMaterial2d(materials.add(Color::from(LIGHT_GREEN))),
         /* set the transform somewhere where it cant be seen cuz player movement will deal with it anyway */
-        Transform::from_xyz(10_000., 10_000., 0.)
+        Transform::from_xyz(10_000.0, 10_000.0, 0.0)
     ));
 }
 
