@@ -51,7 +51,7 @@ pub fn spawn_apple(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 
-    player_tail: Query<&Transform, (With<player::PlayerSegment>, Without<player::Player>)>,
+    player_tail: Query<&Transform, (With<player::Segment>, Without<player::Player>)>,
 ) {
     let mut position = generate_random_position();
 

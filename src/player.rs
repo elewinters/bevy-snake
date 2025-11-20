@@ -16,7 +16,7 @@ impl Plugin for PlayerPlugin {
             detect_segment_collision,
         ).run_if(in_state(GameState::InGame)));
 
-        app.insert_resource(PlayerScore(0));
+        app.insert_resource(Score(0));
     }
 }
 
@@ -31,7 +31,7 @@ const MOVEMENT_SPEED: f32 = 0.15;
 /*      enums     */
 /* -------------- */
 #[derive(Debug)]
-enum PlayerDirection {
+enum Direction {
     Up,
     Down,
     Left,
@@ -44,17 +44,17 @@ enum PlayerDirection {
 
 /* this component represents the "head" of the snake */
 #[derive(Component)]
-pub struct Player(PlayerDirection);
+pub struct Player(Direction);
 
 /* this component represents a piece of the snake's "tail" */
 #[derive(Component)]
-pub struct PlayerSegment;
+pub struct Segment;
 
 /* ------------------ */
 /*      resources     */
 /* ------------------ */
 #[derive(Resource)]
-pub struct PlayerScore(pub u32);
+pub struct Score(pub u32);
 
 /* ---------------- */
 /*      systems     */
@@ -64,13 +64,13 @@ fn spawn_player(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 
-    mut score: ResMut<PlayerScore>
+    mut score: ResMut<Score>
 ) {
     score.0 = 0;
 
     commands.spawn((
         DespawnOnExit(GameState::InGame),
-        Player(PlayerDirection::Right),
+        Player(Direction::Right),
 
         Mesh2d(meshes.add(Rectangle::from_length(TILE_SIZE))),
         MeshMaterial2d(materials.add(Color::from(LIGHT_GREEN))),
@@ -87,7 +87,7 @@ fn spawn_segment(
 ) {
     commands.spawn((
         DespawnOnExit(GameState::InGame),
-        PlayerSegment,
+        Segment,
 
         Mesh2d(meshes.add(Rectangle::from_length(TILE_SIZE))),
         MeshMaterial2d(materials.add(Color::from(LIGHT_GREEN))),
@@ -101,39 +101,39 @@ fn change_direction(
     mut player: Single<&mut Player>
 ) {
     if keyboard.pressed(KeyCode::KeyW) || keyboard.pressed(KeyCode::ArrowUp) {
-        if let PlayerDirection::Down = player.0 {
+        if let Direction::Down = player.0 {
             return;
         }
 
-        player.0 = PlayerDirection::Up;
+        player.0 = Direction::Up;
     }
     if keyboard.pressed(KeyCode::KeyS) || keyboard.pressed(KeyCode::ArrowDown) {
-        if let PlayerDirection::Up = player.0 {
+        if let Direction::Up = player.0 {
             return;
         }
 
-        player.0 = PlayerDirection::Down;
+        player.0 = Direction::Down;
     }
     if keyboard.pressed(KeyCode::KeyA) || keyboard.pressed(KeyCode::ArrowLeft) {
-        if let PlayerDirection::Right = player.0 {
+        if let Direction::Right = player.0 {
             return;
         }
 
-        player.0 = PlayerDirection::Left;
+        player.0 = Direction::Left;
     }
     if keyboard.pressed(KeyCode::KeyD) || keyboard.pressed(KeyCode::ArrowRight) {
-        if let PlayerDirection::Left = player.0 {
+        if let Direction::Left = player.0 {
             return;
         }
 
-        player.0 = PlayerDirection::Right;
+        player.0 = Direction::Right;
     }
 }
 
 fn move_player(
     player: Single<&Player>,
     mut player_transform: Single<&mut Transform, With<Player>>,
-    mut player_tail: Query<&mut Transform, (With<PlayerSegment>, Without<Player>)>,
+    mut player_tail: Query<&mut Transform, (With<Segment>, Without<Player>)>,
 
     mut movement_timer: Local<Option<Timer>>,
     time: Res<Time>,
@@ -153,10 +153,10 @@ fn move_player(
 
     /* move head */
     match player.0 {
-        PlayerDirection::Up => player_transform.translation.y += TILE_SIZE,
-        PlayerDirection::Down => player_transform.translation.y -= TILE_SIZE,
-        PlayerDirection::Left => player_transform.translation.x -= TILE_SIZE,
-        PlayerDirection::Right => player_transform.translation.x += TILE_SIZE
+        Direction::Up => player_transform.translation.y += TILE_SIZE,
+        Direction::Down => player_transform.translation.y -= TILE_SIZE,
+        Direction::Left => player_transform.translation.x -= TILE_SIZE,
+        Direction::Right => player_transform.translation.x += TILE_SIZE
     }
 
     /* move segments */
@@ -191,7 +191,7 @@ fn detect_apple_collision(
     apple_query: Single<(&Transform, Entity), With<apple::Apple>>,
     player_transform: Single<&Transform, With<Player>>,
 
-    mut score: ResMut<PlayerScore>
+    mut score: ResMut<Score>
 ) {
     let (apple_transform, apple_entity) = apple_query.into_inner();
 
@@ -210,7 +210,7 @@ fn detect_segment_collision(
     mut next_state: ResMut<NextState<GameState>>,
 
     player_transform: Single<&Transform, With<Player>>,
-    player_tail: Query<&Transform, (With<PlayerSegment>, Without<Player>)>,
+    player_tail: Query<&Transform, (With<Segment>, Without<Player>)>,
 ) {
     for segment_transform in player_tail.iter() {
         if player_transform.translation == segment_transform.translation {

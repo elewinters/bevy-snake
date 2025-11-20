@@ -154,7 +154,7 @@ fn spawn_score_display(mut commands: Commands) {
 /* try again button logic is handled in ingame_button below */
 fn spawn_gameover_ui(
     mut commands: Commands, 
-    score: Res<player::PlayerScore>
+    score: Res<player::Score>
 ) {
     commands.spawn((
         DespawnOnExit(GameState::GameOver),
@@ -195,7 +195,7 @@ fn spawn_gameover_ui(
 
 fn update_score_display(
     mut text: Single<&mut Text, With<ScoreDisplay>>,
-    score: Res<player::PlayerScore>
+    score: Res<player::Score>
 ) {
     **text = Text::new(format!("score: {}", score.0));
 }
