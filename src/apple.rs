@@ -8,7 +8,7 @@ use crate::*;
 pub struct ApplePlugin;
 impl Plugin for ApplePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::InGame), spawn_apple);
+        app.add_systems(OnEnter(GameState::InGame), spawn);
     }
 }
 
@@ -25,7 +25,7 @@ pub struct Apple;
 /* generate a random position that is properly aligned/tiled with the playarea */
 /* we convert a lot between ints and floats here because rand can only generate random ints */
 /* but bevy expects floats, so this is a bit messy */
-fn generate_random_position() -> Vec3 {
+fn random_position() -> Vec3 {
     let mut rng = rand::rng();
 
     /* convert tile_size to int as it makes the math easier */
@@ -46,20 +46,19 @@ fn generate_random_position() -> Vec3 {
 /* ---------------- */
 
 /* spawns an apple at a random location */
-pub fn spawn_apple(
+pub fn spawn(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 
     player_tail: Query<&Transform, (With<player::Segment>, Without<player::Player>)>,
 ) {
-    let mut position = generate_random_position();
+    let mut position = random_position();
 
     /* prevent the apple from spawning on the tail */
     for segment_transform in player_tail.iter() {
         while segment_transform.translation == position {
-            println!("WE ARE LOOPING!!!");
-            position = generate_random_position();
+            position = random_position();
         }
     }
 

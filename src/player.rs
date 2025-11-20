@@ -200,7 +200,7 @@ fn detect_apple_collision(
         score.0 += 1;
         commands.entity(apple_entity).despawn();
 
-        commands.run_system_cached(apple::spawn_apple);
+        commands.run_system_cached(apple::spawn);
         commands.run_system_cached(spawn_segment);
     }
 }
