@@ -94,7 +94,7 @@ fn spawn_main_menu(mut commands: Commands) {
                 add_padding!(1.),
                 font_size!(16.),
 
-                Text::new("a snake clone made in bevy 0.16"),
+                Text::new("a snake clone made in bevy 0.17"),
                 TextColor::from(BLACK)
             ),
             (
