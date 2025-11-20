@@ -36,7 +36,7 @@ macro_rules! add_padding {
     ($padding:expr) => {
         Node {
             padding: UiRect {
-                bottom: Val::Percent($padding),
+                bottom: percent($padding),
                 ..default()
             },
             ..default()
@@ -75,8 +75,8 @@ fn spawn_main_menu(mut commands: Commands) {
         DespawnOnExit(GameState::MainMenu),
 
         Node {
-            width: Val::Percent(100.0),
-            height: Val::Percent(90.0),
+            width: percent(100.0),
+            height: percent(90.0),
             
             flex_direction: FlexDirection::Column,
             align_items: AlignItems::Center,
@@ -142,8 +142,8 @@ fn spawn_score_display(mut commands: Commands) {
 
         Node {
             position_type: PositionType::Absolute,
-            bottom: Val::Px(5.),
-            left: Val::Px(5.0),
+            bottom: px(5.),
+            left: px(5.0),
             ..default()
         },
         Text::new("score: N/A"),
@@ -160,8 +160,8 @@ fn spawn_gameover_ui(
         DespawnOnExit(GameState::GameOver),
 
         Node {
-            width: Val::Percent(100.0),
-            height: Val::Percent(90.0),
+            width: percent(100.0),
+            height: percent(90.0),
             
             flex_direction: FlexDirection::Column,
             align_items: AlignItems::Center,
