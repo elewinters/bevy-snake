@@ -1,4 +1,4 @@
-## a snake clone made in bevy 0.16
+## a snake clone made in bevy 0.17
 
 i made this mostly just to learn bevy nd im really not sure how optimally ive done a lot of things but i tried my best!
 includes some UI, such as a main menu to start the game, a display for the player's score, as well as a game over UI to restart the game once you die
