@@ -1,10 +1,10 @@
 [package]
 name = "bevy-snake"
-version = "1.0.0"
+version = "1.2.0"
 edition = "2024"
 
 [dependencies]
-rand = "0.9.1"
+rand = "0.9.2"
 
 [dependencies.bevy]
 version = "0.17.3"
@@ -38,10 +38,3 @@ opt-level = 3
 opt-level = 's'
 lto = true
 codegen-units = 1
-
-# wasm stuff
-# NOTE!!! you have to have the environment variable RUSTFLAGS set to --cfg getrandom_backend="wasm_js" for this to compile correctly for wasm
-# (this looks like set RUSTFLAGS=--cfg getrandom_backend="wasm_js" on windows)   
-# either that or put a rustflags for wasm with that config in your .cargo/config.toml  
-[target.'cfg(target_arch = "wasm32")'.dependencies]
-getrandom = { version = "0.3.3", default-features = false, features = ["wasm_js"] }
