@@ -87,7 +87,7 @@ fn spawn_main_menu(mut commands: Commands) {
             (
                 add_padding!(1.),
 
-                Text::new("bevy_snake"),
+                Text::new("bevy_snake v1.2.0"),
                 TextColor::from(BLACK)
             ),
             (
